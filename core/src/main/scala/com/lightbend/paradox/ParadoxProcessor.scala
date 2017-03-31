@@ -39,12 +39,18 @@ class ParadoxProcessor(reader: Reader = new Reader, writer: Writer = new Writer)
     sourceSuffix:       String,
     targetSuffix:       String,
     properties:         Map[String, String],
-    navigationDepth:    Int,
+    navDepth:           Int,
+    navExpandActive:    Boolean,
+    navExpandDepth:     Int,
+    navIncludeHeaders:  Boolean,
     themeDir:           File,
     errorListener:      STErrorListener): Seq[(File, String)] = {
     val pages = parsePages(mappings, Path.replaceSuffix(sourceSuffix, targetSuffix))
     val paths = Page.allPaths(pages).toSet
     val globalPageMappings = rootPageMappings(pages)
+
+    val pageToc = new TableOfContents(pages = true, headers = navIncludeHeaders, ordered = false, maxDepth = navDepth, autoExpand = navExpandActive, maxExpandDepth = navExpandDepth)
+    val headerToc = new TableOfContents(pages = false, headers = true, ordered = false, maxDepth = navDepth)
 
     @tailrec
     def render(location: Option[Location[Page]], rendered: Seq[(File, String)] = Seq.empty): Seq[(File, String)] = location match {
@@ -53,8 +59,6 @@ class ParadoxProcessor(reader: Reader = new Reader, writer: Writer = new Writer)
         val pageProperties = properties ++ page.properties.get
         val currentMapping = Path.generateTargetFile(Path.relativeLocalPath(page.rootSrcPage, page.file.getPath), globalPageMappings)_
         val writerContext = Writer.Context(loc, paths, currentMapping, sourceSuffix, targetSuffix, pageProperties)
-        val pageToc = new TableOfContents(pages = true, headers = false, ordered = false, maxDepth = navigationDepth)
-        val headerToc = new TableOfContents(pages = false, headers = true, ordered = false, maxDepth = navigationDepth)
         val pageContext = PageContents(leadingBreadcrumbs, loc, writer, writerContext, pageToc, headerToc)
         val outputFile = new File(outputDirectory, page.path)
         val template = CachedTemplates(themeDir, page.properties(Page.Properties.DefaultLayoutMdIndicator, PageTemplate.DefaultName))

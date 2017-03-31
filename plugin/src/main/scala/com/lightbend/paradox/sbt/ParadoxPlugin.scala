@@ -43,6 +43,9 @@ object ParadoxPlugin extends AutoPlugin {
     paradoxSourceSuffix := ".md",
     paradoxTargetSuffix := ".html",
     paradoxNavigationDepth := 2,
+    paradoxNavigationExpandActive := false,
+    paradoxNavigationExpandDepth := 1,
+    paradoxNavigationIncludeHeaders := false,
     paradoxProperties := Map.empty,
     paradoxTheme := Some(builtinParadoxTheme("generic")),
     paradoxLeadingBreadcrumbs := Nil,
@@ -127,6 +130,9 @@ object ParadoxPlugin extends AutoPlugin {
         paradoxTargetSuffix.value,
         paradoxProperties.value,
         paradoxNavigationDepth.value,
+        paradoxNavigationExpandActive.value,
+        paradoxNavigationExpandDepth.value,
+        paradoxNavigationIncludeHeaders.value,
         paradoxThemeDirectory.value,
         new PageTemplate.ErrorLogger(s => streams.value.log.error(s))
       )
