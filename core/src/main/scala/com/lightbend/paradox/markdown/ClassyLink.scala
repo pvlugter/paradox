@@ -27,9 +27,9 @@ import scala.collection.JavaConverters._
 class ClassyLinkSerializer extends ToHtmlSerializerPlugin {
   def visit(node: Node, visitor: Visitor, printer: Printer): Boolean = node match {
     case link: ClassyLinkNode =>
-      printer.print(s"""<a href="${link.href}" class="${link.classAttribute}">""")
+      // printer.print(s"""<a href="${link.href}" class="${link.classAttribute}">""")
       link.getChildren.asScala.foreach(_.accept(visitor))
-      printer.print("</a>")
+      // printer.print("</a>")
       true
     case _ => false
   }

@@ -118,8 +118,12 @@ sealed trait SourceDirective { this: Directive =>
 case class RefDirective(page: Page, pathExists: String => Boolean, convertPath: String => String)
     extends InlineDirective("ref", "ref:") with SourceDirective {
 
-  def render(node: DirectiveNode, visitor: Visitor, printer: Printer): Unit =
-    new ExpLinkNode("", check(convertPath(resolvedSource(node, page))), node.contentsNode).accept(visitor)
+  def render(node: DirectiveNode, visitor: Visitor, printer: Printer): Unit = {
+    //new ExpLinkNode("", check(convertPath(resolvedSource(node, page))), node.contentsNode).accept(visitor)
+    val emph = new StrongEmphSuperNode(Seq(node.contentsNode).asJava)
+    emph.setClosed(true)
+    emph.accept(visitor)
+  }
 
   private def check(path: String): String = {
     if (!pathExists(Path.resolve(page.path, path)))

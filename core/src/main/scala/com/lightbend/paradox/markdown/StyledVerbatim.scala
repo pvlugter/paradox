@@ -81,3 +81,8 @@ object PrettifyVerbatimSerializer extends StyledVerbatimSerializer {
     case _                 => printClass(printer, s"language-$nodeType")
   }
 }
+
+object PlainVerbatimSerializer extends StyledVerbatimSerializer {
+  override def printPreAttributes(printer: Printer, nodeGroup: String): Unit = ()
+  override def printCodeAttributes(printer: Printer, nodeType: String): Unit = ()
+}
